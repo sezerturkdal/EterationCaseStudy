@@ -1,29 +1,63 @@
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, useColorScheme, ScrollView, SafeAreaView } from 'react-native';
-import {
-    Colors,
-  } from 'react-native/Libraries/NewAppScreen';
+import { View, Text, Button, StyleSheet, TextInput, ScrollView, SafeAreaView } from 'react-native';
 
 const AddSimpsonScreen = () => {
-    const isDarkMode = useColorScheme() === 'dark';
 
-    const backgroundStyle = {
-      backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-    };
+  const [name, setName] = useState(0);
+  const [job, setJob] = useState(0);
+  const [description, setDescription] = useState(0);
+  const [imageURL, setImageURL] = useState(0);
 
-  const [count, setCount] = useState(0);
+  const save =()=>{
+
+  }
 
   return (
     <View style={styles.container}>
-      <SafeAreaView style={backgroundStyle}>
+      <SafeAreaView>
       <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Text>Read the docs to discover what to do next:</Text>
+        contentInsetAdjustmentBehavior="automatic">
+        <View style={styles.inputContainer}>
+          <Text>Name Surname:</Text>
+          <TextInput
+                style={styles.inputText}
+                onChangeText={(value)=>{setName(value)}}
+                value={name}
+                placeholder=""
+            />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text>Job Title:</Text>
+          <TextInput
+                style={styles.inputText}
+                onChangeText={(value)=>{setJob(value)}}
+                value={job}
+            />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text>About Him/Her:</Text>
+          <TextInput
+                style={[styles.inputText , {height:90}]}
+                onChangeText={(value)=>{setDescription(value)}}
+                value={description}
+                multiline={true}
+                numberOfLines={4}
+            />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text>Image Link:</Text>
+          <TextInput
+                style={styles.inputText}
+                onChangeText={(value)=>{setImageURL(value)}}
+                value={imageURL}
+            />
+        </View>
+        <View style={styles.saveButton}>
+            <Button
+                onPress={()=>{save()}}
+                title="Add Character" 
+                color="#fff"   
+            />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -34,25 +68,25 @@ const AddSimpsonScreen = () => {
 // React Native Styles
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    flex: 1
   },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  inputContainer:{
+    marginTop:10,
+    marginHorizontal:10
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  inputText:{
+    backgroundColor:'#fff',
+    borderColor:'gray',
+    borderWidth: 0.5,
+    borderRadius:4,
+    height:40,
+    paddingLeft:5
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+  saveButton:{
+    backgroundColor: '#00aeef',
+    borderRadius:4,
+    marginTop:20,
+    marginHorizontal:10
   }
 });
 

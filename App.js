@@ -33,7 +33,7 @@ const MyStack = () => {
         <Stack.Screen
           name="AddSimpsonScreen"
           component={AddSimpsonScreen}
-          options={{ title: 'AddSimpson' }}
+          options={{ title: 'Add New Character' }}
         />
       </Stack.Navigator>
     </NavigationContainer>
