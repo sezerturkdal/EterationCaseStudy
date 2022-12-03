@@ -6,8 +6,8 @@ import { faArrowUp } from '@fortawesome/free-solid-svg-icons/faArrowUp'
 import { faTrash } from '@fortawesome/free-solid-svg-icons/faTrash'
 
 
-const CustomRow = ({ id, name, avatar_url, navigation }) => (
-    <TouchableOpacity onPress={()=>gotoDetails(navigation)}>
+const CustomRow = ({ id, name, avatar_url, job, description, navigation }) => (
+    <TouchableOpacity onPress={()=>gotoDetails(id, name, avatar_url, job, description, navigation )}>
     <View style={styles.container}>
          <Text style={styles.rowNumber}>
                 {id}
@@ -38,8 +38,9 @@ const CustomRow = ({ id, name, avatar_url, navigation }) => (
     </View>
     </TouchableOpacity>
 );
-const gotoDetails = (navigation) =>{
-    navigation.navigate('SimpsonDetailScreen', { name: 'Jane' })
+const gotoDetails = (id, name, avatar_url, job, description, navigation) =>{
+   
+    navigation.navigate('SimpsonDetailScreen',  {id: id, name: name, avatar_url: avatar_url, job: job, description: description} )
 }
 
 const changeRowNumber = (num) =>{

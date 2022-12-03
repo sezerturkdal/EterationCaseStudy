@@ -1,30 +1,24 @@
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, useColorScheme, StatusBar, ScrollView, SafeAreaView } from 'react-native';
+import { View, Text, Button, StyleSheet, StatusBar, ScrollView, SafeAreaView, Image } from 'react-native';
 import {
     Colors
   } from 'react-native/Libraries/NewAppScreen';
 
-const SimpsonDetailScreen = () => {
-    const isDarkMode = useColorScheme() === 'dark';
-
-    const backgroundStyle = {
-      backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-    };
-
+function SimpsonDetailScreen ({ route }) {
+    
   const [count, setCount] = useState(0);
+
+  const { id, name, avatar_url, job, description, navigation} = route.params;
 
   return (
     <View style={styles.container}>
-      <SafeAreaView style={backgroundStyle}>
+      <SafeAreaView style={styles.safeArea}>
       <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Text>Read the docs to discover what to do next:</Text>
-        </View>
+        contentInsetAdjustmentBehavior="automatic">
+        <Image source={{ uri: avatar_url }} style={styles.photo} resizeMode='contain' />
+        <Text style={styles.name}>{name}</Text> 
+        <Text style={styles.job}>{job}</Text>
+        <Text style={styles.description}>{description}</Text>
       </ScrollView>
     </SafeAreaView>
     </View>
@@ -38,22 +32,32 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  name:{
+    alignSelf:'center',
+    fontSize:28,
+    fontWeight:'500'
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  job:{
+    alignSelf:'center',
+    fontSize:18,
+    fontWeight:'200',
+    marginTop:5
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
+  description:{
+    fontSize:14,
+    fontWeight:'100',
+    marginTop:30,
+    marginHorizontal:30
   },
-  highlight: {
-    fontWeight: '700',
-  }
+  photo: {
+    height: 300,
+    width: 0,
+    marginTop:20,
+    marginLeft:10,
+    justifyContent:'center',
+    alignSelf:'center',
+    aspectRatio: 1
+  },
 });
 
 

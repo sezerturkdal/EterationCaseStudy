@@ -38,6 +38,8 @@ function ListingScreen ({navigation}) {
                 id={index+1}
                 name={item.name}
                 avatar_url={item.avatar}
+                job={item.job}
+                description={item.description}
                 navigation = {navigation}
             />}
         />
