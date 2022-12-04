@@ -4,25 +4,37 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faAdd } from '@fortawesome/free-solid-svg-icons/faAdd'
 import CustomRow from '../components/CustomRow';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch, useSelector } from 'react-redux';
+import {updateList, addList} from '../../redux/actions/simpsonsActions';
 
 function ListingScreen ({navigation}) {
 
   const [itemList, setitemList] = useState(0);
+  const dispatch = useDispatch();
+  const state = useSelector((state)=>state);
 
   useEffect(() => {
-    readData();
+    if(itemList == [] || itemList == null){
+      readData();
+    }
+    if(JSON.stringify(itemList) !== JSON.stringify(state.simpsonsList)){
+      setitemList(state.simpsonsList);
+      saveData(state.simpsonsList)
+    }
   });
 
   const readData = async () => {
     try {
       const value = await AsyncStorage.getItem('SimpsonsList');
       if (value !== null) {
-        setitemList(JSON.parse(value));
+        let valueJSON = JSON.parse(value)
+        dispatch(updateList(valueJSON))
+        setitemList(valueJSON);
       }else{
         getData()
       }
     } catch (e) {
-      console.log('Error when fetching data from storage')
+      console.log('Error when fetching data from storage', e)
     }
   };
 
@@ -38,6 +50,7 @@ function ListingScreen ({navigation}) {
     return fetch('https://5fc9346b2af77700165ae514.mockapi.io/simpsons')
       .then((response) => response.json())
       .then((json) => {
+        dispatch(updateList(json))
         setitemList(json)
         saveData(json)
         return json;
@@ -48,13 +61,13 @@ function ListingScreen ({navigation}) {
   };
 
   const addButtonClicked = () =>{
-    navigation.navigate('AddSimpsonScreen', { name: 'Jane' })
+    navigation.navigate('AddSimpsonScreen', { navigation: navigation})
   }
 
   return (
     <View style={styles.container}>
           <FlatList
-            data={itemList}
+            data={state.simpsonsList}
             style={styles.list}
             keyExtractor={(itm) => itm.id}   
             renderItem={({ item, index }) => <CustomRow

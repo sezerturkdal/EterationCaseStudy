@@ -7,12 +7,13 @@
  */
 
 import React from 'react';
-import type {Node} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ListingScreen from './src/pages/ListingScreen';
 import SimpsonDetailScreen from './src/pages/SimpsonDetailScreen';
 import AddSimpsonScreen from './src/pages/AddSimpsonScreen';
+import { Provider } from 'react-redux';
+import store from './redux/store';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,9 +42,11 @@ const MyStack = () => {
 };
 
 
-const App: () => Node = () => {
+const App = () => {
   return (
-    MyStack()
+    <Provider store={store}>
+      {MyStack()}
+    </Provider>
   );
 };
 

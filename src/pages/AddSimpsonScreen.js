@@ -1,15 +1,30 @@
 import React, { useState } from 'react';
 import { View, Text, Button, StyleSheet, TextInput, ScrollView, SafeAreaView } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import {addList} from '../../redux/actions/simpsonsActions';
 
-const AddSimpsonScreen = () => {
+const AddSimpsonScreen = ({navigation}) => {
 
   const [name, setName] = useState(0);
   const [job, setJob] = useState(0);
   const [description, setDescription] = useState(0);
   const [imageURL, setImageURL] = useState(0);
 
-  const save =()=>{
+  const dispatch = useDispatch();
+  const state = useSelector((state)=>state);
 
+  const save =()=>{
+    let saveModel = {
+        name: name,
+        avatar: imageURL,
+        job: job,
+        description: description,
+        id:75
+    }
+    let saveModelJson = JSON.stringify(saveModel)
+    dispatch(addList(saveModelJson))
+
+    navigation.navigate('ListingScreen')
   }
 
   return (
