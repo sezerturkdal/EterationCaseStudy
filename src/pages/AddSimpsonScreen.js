@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Button, StyleSheet, TextInput, ScrollView, SafeAreaView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import {addList} from '../../redux/actions/simpsonsActions';
+import _ from 'lodash'
 
 const AddSimpsonScreen = ({navigation}) => {
 
@@ -14,16 +15,18 @@ const AddSimpsonScreen = ({navigation}) => {
   const state = useSelector((state)=>state);
 
   const save =()=>{
+    const maxId = _.maxBy(state.simpsonsList, function(o) {return o.id;})
+    const maxRowNumber = _.maxBy(state.simpsonsList, function(o) {return o.row;})
     let saveModel = {
         name: name,
         avatar: imageURL,
         job: job,
         description: description,
-        id:75
+        row:parseInt(maxRowNumber.row)+1,
+        id: parseInt(maxId.id)+1
     }
     let saveModelJson = JSON.stringify(saveModel)
     dispatch(addList(saveModelJson))
-
     navigation.navigate('ListingScreen')
   }
 

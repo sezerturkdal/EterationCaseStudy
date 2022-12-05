@@ -6,6 +6,7 @@ import CustomRow from '../components/CustomRow';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
 import {updateList, addList} from '../../redux/actions/simpsonsActions';
+import _ from 'lodash'
 
 function ListingScreen ({navigation}) {
 
@@ -50,10 +51,14 @@ function ListingScreen ({navigation}) {
     return fetch('https://5fc9346b2af77700165ae514.mockapi.io/simpsons')
       .then((response) => response.json())
       .then((json) => {
-        dispatch(updateList(json))
-        setitemList(json)
-        saveData(json)
-        return json;
+        const modifiedJson = json.map((o,index) => ({
+          ...o,
+          row: `${index+1}`
+        }));
+        dispatch(updateList(modifiedJson))
+        setitemList(modifiedJson)
+        saveData(modifiedJson)
+        return modifiedJson;
       })
       .catch((error) => {
         console.error(error);
@@ -67,11 +72,12 @@ function ListingScreen ({navigation}) {
   return (
     <View style={styles.container}>
           <FlatList
-            data={state.simpsonsList}
+            data={_.orderBy(state.simpsonsList, ['row'], ['asc'])}
             style={styles.list}
             keyExtractor={(itm) => itm.id}   
-            renderItem={({ item, index }) => <CustomRow
-                id={index+1}
+            renderItem={({ item }) => <CustomRow
+                id={item.id}
+                row={item.row}
                 name={item.name}
                 avatar_url={item.avatar}
                 job={item.job}

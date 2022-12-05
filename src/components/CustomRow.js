@@ -4,13 +4,58 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown'
 import { faArrowUp } from '@fortawesome/free-solid-svg-icons/faArrowUp'
 import { faTrash } from '@fortawesome/free-solid-svg-icons/faTrash'
+import { useDispatch, useSelector } from 'react-redux';
+import {updateList, addList} from '../../redux/actions/simpsonsActions';
+import _ from 'lodash'
 
 
-const CustomRow = ({ id, name, avatar_url, job, description, navigation }) => (
+function CustomRow ({ id, row, name, avatar_url, job, description, navigation }) {
+    const dispatch = useDispatch();
+    const state = useSelector((state)=>state);
+
+    const gotoDetails = (id, name, avatar_url, job, description, navigation) =>{
+   
+        navigation.navigate('SimpsonDetailScreen',  {id: id, name: name, avatar_url: avatar_url, job: job, description: description} )
+    }
+
+    const moveLower = () =>{
+        var lst = _.extend([], state.simpsonsList);
+        const currentRow = _.find(lst, function(o) { return o.id ==id; });
+        const nextRow = _.find(lst, function(o) { return o.row == parseInt(currentRow.row) + 1; });
+        if(nextRow==null){
+            return;
+        }
+        currentRow.row = parseInt(currentRow.row) + 1
+        nextRow.row = parseInt(currentRow.row) - 1
+        dispatch(updateList(lst));
+    }
+
+    const moveUpper = () =>{
+        var lst = _.extend([], state.simpsonsList);
+        const currentRow = _.find(lst, function(o) { return o.id ==id; });
+        const nextRow = _.find(lst, function(o) { return o.row == parseInt(currentRow.row) - 1; });
+        if(nextRow==null){
+            return;
+        }
+        currentRow.row = parseInt(currentRow.row) - 1
+        nextRow.row = parseInt(currentRow.row) + 1
+        dispatch(updateList(lst));
+    }
+    
+    const deleteRow = () =>{
+        var evens = _.filter(state.simpsonsList, function(o) { return o.id !=id; });
+        const modifiedJson = evens.map((o,index) => ({
+            ...o,
+            row: `${index+1}`
+          }));
+        dispatch(updateList(modifiedJson));
+    }
+    
+    return (
     <TouchableOpacity onPress={()=>gotoDetails(id, name, avatar_url, job, description, navigation )}>
     <View style={styles.container}>
          <Text style={styles.rowNumber}>
-                {id}
+                {row}
         </Text>
         <Image source={{ uri: avatar_url }} style={styles.photo} resizeMode='contain' />
         <View style={styles.container_text}>
@@ -20,35 +65,24 @@ const CustomRow = ({ id, name, avatar_url, job, description, navigation }) => (
         </View>
         <View style={styles.buttonsContainer}>
             <View style={styles.upDownButtons}>
-                <TouchableOpacity style={styles.addButton} onPress={()=>changeRowNumber(1)}>
+                <TouchableOpacity style={styles.addButton} onPress={()=>moveUpper()}>
                     <FontAwesomeIcon icon={faArrowUp} />
                 </TouchableOpacity>      
             </View> 
             <View style={styles.upDownButtons}>
-                <TouchableOpacity style={styles.addButton} onPress={()=>changeRowNumber(0)}>
+                <TouchableOpacity style={styles.addButton} onPress={()=>moveLower()}>
                     <FontAwesomeIcon icon={faArrowDown} />
                 </TouchableOpacity>  
             </View>
             <View style={styles.upDownButtons}>
-                 <TouchableOpacity style={styles.addButton} onPress={deleteRow}>
+                 <TouchableOpacity style={styles.addButton} onPress={()=>deleteRow()}>
                     <FontAwesomeIcon icon={faTrash} />
                  </TouchableOpacity>  
             </View>
         </View>
     </View>
     </TouchableOpacity>
-);
-const gotoDetails = (id, name, avatar_url, job, description, navigation) =>{
-   
-    navigation.navigate('SimpsonDetailScreen',  {id: id, name: name, avatar_url: avatar_url, job: job, description: description} )
-}
-
-const changeRowNumber = (num) =>{
-  console.log(num)
-}
-
-const deleteRow = () =>{
-
+    )
 }
 
 const styles = StyleSheet.create({
@@ -66,12 +100,9 @@ const styles = StyleSheet.create({
         color: '#000',
     },
     container_text: {
-      //  flex: 1,
         flexDirection: 'column',
         marginLeft: 12,
         justifyContent: 'center',
-      //  borderColor:'red',
-       // borderWidth:1,
         flex:1
     },
     rowNumber:{
@@ -92,17 +123,10 @@ const styles = StyleSheet.create({
         aspectRatio: 1
     },
     buttonsContainer: {
-       // borderColor:'green',
-       // borderWidth:1,
         alignSelf: 'center',
         flexDirection:"row",
-        //right:20,
-        //position:'absolute',
-        //flex:1
     },
     upDownButtons: {
-      //  borderColor:'green',
-      //  borderWidth:1,
        alignSelf: 'center',
        marginLeft:20
     }
